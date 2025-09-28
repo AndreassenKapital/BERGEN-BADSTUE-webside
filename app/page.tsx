@@ -73,11 +73,11 @@ export default function ComingSoon() {
             <h1 className="text-4xl md:text-6xl font-bold mb-4">Bergen Badstu</h1>
             <p className="text-xl md:text-2xl font-light mb-6">Vi lanserer snart!</p>
             <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto">
-              <p className="text-lg mb-4">
+              <p className="text-lg mb-4 text-white">
                 Vår badstu i Bergen åpner snart. 
                 Opplev autentisk badstukultur i hjertet av byen.
               </p>
-              <p className="text-sm opacity-90">
+              <p className="text-sm opacity-90 text-white">
                 Følg med for oppdateringer om lanseringsdato og åpningstider.
               </p>
             </div>
