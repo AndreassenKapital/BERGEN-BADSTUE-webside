@@ -12,16 +12,16 @@ const roomUpdateSchema = z.object({
   imageUrl: z.string().url().optional(),
 });
 
-async function isAdmin() {
+async function erAdmin() {
   const { userId } = await auth();
   if (!userId) return false;
 
-  const user = await prisma.user.findUnique({
+  const bruker = await prisma.user.findUnique({
     where: { id: userId },
     select: { role: true },
   });
 
-  return user?.role === 'ADMIN';
+  return bruker?.role === 'ADMIN';
 }
 
 export async function GET(
@@ -36,13 +36,13 @@ export async function GET(
     });
 
     if (!room) {
-      return new NextResponse('Room not found', { status: 404 });
+      return new NextResponse('Room ikke funnet', { status: 404 });
     }
 
     return NextResponse.json(room);
   } catch (error) {
-    console.error('Error fetching room:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.error('Feil ved henting av room:', error);
+    return new NextResponse('Intern serverfeil', { status: 500 });
   }
 }
 
@@ -51,9 +51,8 @@ export async function PATCH(
   { params }: { params: { roomId: string } }
 ) {
   try {
-    // Check if user is admin
-    if (!await isAdmin()) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    if (!await erAdmin()) {
+      return NextResponse.json({ error: 'Ikke autorisert' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -68,14 +67,14 @@ export async function PATCH(
 
     return NextResponse.json(room);
   } catch (error) {
-    console.error('Error updating room:', error);
+    console.error('Feil ved oppdatering av room:', error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid room data', details: error.errors },
+        { error: 'Ugyldig room-data', details: error.errors },
         { status: 400 }
       );
     }
-    return NextResponse.json({ error: 'Failed to update room' }, { status: 500 });
+    return NextResponse.json({ error: 'Klarte ikke oppdatere room' }, { status: 500 });
   }
 }
 
@@ -84,13 +83,12 @@ export async function DELETE(
   { params }: { params: { roomId: string } }
 ) {
   try {
-    // Check if user is admin
-    if (!await isAdmin()) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    if (!await erAdmin()) {
+      return NextResponse.json({ error: 'Ikke autorisert' }, { status: 403 });
     }
 
-    // Try to get bookings first
-    const activeBookings = await prisma.booking.findFirst({
+    // Sjekk om det finnes aktive bookinger
+    const aktiveBookinger = await prisma.booking.findFirst({
       where: {
         roomId: params.roomId,
         status: 'CONFIRMED',
@@ -100,9 +98,9 @@ export async function DELETE(
       },
     });
 
-    if (activeBookings) {
+    if (aktiveBookinger) {
       return NextResponse.json(
-        { error: 'Cannot delete room with active bookings' },
+        { error: 'Kan ikke slette room med aktive bookinger' },
         { status: 400 }
       );
     }
@@ -115,7 +113,7 @@ export async function DELETE(
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error('Error deleting room:', error);
-    return NextResponse.json({ error: 'Failed to delete room' }, { status: 500 });
+    console.error('Feil ved sletting av room:', error);
+    return NextResponse.json({ error: 'Klarte ikke slette room' }, { status: 500 });
   }
 }

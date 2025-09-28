@@ -12,17 +12,17 @@ const roomCreateSchema = z.object({
   imageUrl: z.string().url().optional(),
 });
 
-// Middleware to check if user is admin
-async function isAdmin() {
+// Middleware for å sjekke om bruker er admin
+async function erAdmin() {
   const { userId } = await auth();
   if (!userId) return false;
 
-  const user = await prisma.user.findUnique({
+  const bruker = await prisma.user.findUnique({
     where: { id: userId },
     select: { role: true },
   });
 
-  return user?.role === 'ADMIN';
+  return bruker?.role === 'ADMIN';
 }
 
 export async function GET() {
@@ -34,16 +34,16 @@ export async function GET() {
     });
     return NextResponse.json(rooms);
   } catch (error) {
-    console.error('Error fetching rooms:', error);
-    return NextResponse.json({ error: 'Failed to fetch rooms' }, { status: 500 });
+    console.error('Feil ved henting av rooms:', error);
+    return NextResponse.json({ error: 'Klarte ikke hente rooms' }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
-    // Check if user is admin
-    if (!await isAdmin()) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    // Sjekk om bruker er admin
+    if (!await erAdmin()) {
+      return NextResponse.json({ error: 'Ikke autorisert' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -55,13 +55,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json(room);
   } catch (error) {
-    console.error('Error creating room:', error);
+    console.error('Feil ved oppretting av room:', error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid room data', details: error.errors },
+        { error: 'Ugyldig room-data', details: error.errors },
         { status: 400 }
       );
     }
-    return NextResponse.json({ error: 'Failed to create room' }, { status: 500 });
+    return NextResponse.json({ error: 'Klarte ikke opprette room' }, { status: 500 });
   }
 }

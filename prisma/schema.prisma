@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -25,6 +25,12 @@ model User {
   updatedAt  DateTime     @updatedAt
 
   @@index([email])
+}
+
+enum BookingType {
+  DROPIN
+  PRIVAT
+  BADSTU
 }
 
 enum UserRole {
@@ -71,17 +77,30 @@ model Booking {
   id          String        @id @default(cuid())
   roomId      String
   room        Room          @relation(fields: [roomId], references: [id])
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
+  userId      String?
+  user        User?         @relation(fields: [userId], references: [id])
   title       String
   description String?
   startTime   DateTime
   endTime     DateTime
-  status      BookingStatus @default(CONFIRMED)
+  status      BookingStatus @default(PENDING)
+
+  bookingType BookingType   @default(DROPIN)
+
   attendees   Int?
   purpose     String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+
+  // Nye felter for kundeinfo
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+
+  // Betalingsfelter
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentId     String?
+  amount        Float?
 
   @@index([roomId])
   @@index([userId])
@@ -89,9 +108,17 @@ model Booking {
 }
 
 enum BookingStatus {
+  PENDING
   CONFIRMED
   CANCELLED
   COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
 }
 
 model RoomAvailability {
@@ -103,4 +130,33 @@ model RoomAvailability {
 
   @@unique([roomId, date])
   @@index([date])
+}
+
+// Badstu-spesifikk modell
+model BadstuBooking {
+  id          String        @id @default(cuid())
+  customerName  String
+  customerEmail String
+  customerPhone String?
+  date          DateTime
+  timeSlot      String      // f.eks. "09:00 - 10:00"
+  status        BookingStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentId     String?
+  amount        Float        @default(299.0) // Standardpris
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([date, timeSlot])
+  @@index([customerEmail])
+}
+
+// E-post registrering for coming soon
+model EmailSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
 }
