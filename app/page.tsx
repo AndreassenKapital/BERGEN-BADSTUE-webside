@@ -18,6 +18,9 @@ export default function ComingSoon() {
           <p className="text-2xl text-white mb-8">
             Vi lanserer snart!
           </p>
+          <p className="text-lg text-white max-w-2xl">
+            Vår badstu i Bergen åpner snart. Opplev autentisk badstukultur i hjertet av byen.
+          </p>
         </div>
       </section>
     </main>
