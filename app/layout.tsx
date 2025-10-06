@@ -8,6 +8,9 @@ import './globals.css';
 export const metadata = {
   title: 'Room Booking System',
   description: 'A modern room booking system for managing meeting spaces',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
