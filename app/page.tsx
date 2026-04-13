@@ -70,7 +70,7 @@ function ProblemSection() {
           Badstu i Bergen er fragmentert
         </h2>
         <p className="mt-6 text-lg leading-relaxed text-navy-mid">
-          I dag må du google, sjekke Instagram, ringe rundt og håpe på ledig
+          I dag må du google, sjekke Instagram, sjekke rundt og håpe på ledig
           plass. Hver tilbyder har sin egen nettside, sine egne priser og sitt
           eget bookingsystem. Det finnes ingen enkel måte å sammenligne og booke
           på tvers.
