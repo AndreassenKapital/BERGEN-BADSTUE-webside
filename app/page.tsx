@@ -19,6 +19,7 @@ export default function LandingPage() {
       <ProblemSection />
       <HowItWorksSection />
       <ProvidersSection />
+      <LaunchSection />
       <Footer />
     </>
   );
@@ -166,6 +167,37 @@ function ProvidersSection() {
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────── Launch info ─────────────────────── */
+
+function LaunchSection() {
+  return (
+    <section className="bg-white px-6 py-20 md:px-12 md:py-28">
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="text-sm font-semibold uppercase tracking-widest text-amber">
+          Kommer snart
+        </p>
+        <h2 className="mt-3 text-3xl font-bold text-navy-deep md:text-4xl">
+          Vi bygger plattformen nå
+        </h2>
+        <p className="mt-6 text-lg leading-relaxed text-navy-mid">
+          Bergen Badstu er under utvikling. Vi jobber med å samle tilbydere,
+          bygge bookingløsningen og gjøre det enkelt å finne din neste
+          badstuopplevelse.
+        </p>
+        <p className="mt-4 text-lg text-navy-mid">
+          Har du innspill eller ønsker?{" "}
+          <a
+            href="mailto:post@bergenbadstu.no"
+            className="font-semibold text-amber underline decoration-amber/30 transition hover:decoration-amber"
+          >
+            Send oss en e-post
+          </a>
+        </p>
       </div>
     </section>
   );
