@@ -40,7 +40,7 @@ function HeroSection() {
           alt="Bergen Badstu logo"
           width={140}
           height={56}
-          className="object-contain"
+          className="object-contain rounded-full"
           priority
         />
         <a
@@ -262,7 +262,7 @@ function Footer() {
           alt="Bergen Badstu logo"
           width={100}
           height={40}
-          className="object-contain opacity-80"
+          className="object-contain rounded-full"
         />
         <div className="flex flex-col gap-1 text-sm text-cream/60">
           <span>bergenbadstu.no</span>
